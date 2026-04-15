@@ -362,6 +362,16 @@ export default function App() {
                         {formatCurrency(results.monthlyCashFlow)}
                       </span>
                     </div>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-slate-500">+ Principal Paydown</span>
+                      <span className="font-medium text-emerald-600">+{formatCurrency(results.firstMonthPrincipal)}</span>
+                    </div>
+                    <div className="border-t border-slate-200 my-2 pt-3 flex justify-between items-center font-semibold text-sm">
+                      <span className="text-slate-800">Total Return</span>
+                      <span className={results.monthlyCashFlow + results.firstMonthPrincipal >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
+                        {formatCurrency(results.monthlyCashFlow + results.firstMonthPrincipal)}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Expense Bar Visualization */}
