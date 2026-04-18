@@ -337,23 +337,21 @@ export default function App() {
                     </div>
                   </div>
                   <div className="bg-white p-4 text-center">
-                    <div className="text-sm text-slate-500 mb-2">Breakeven Rent</div>
-                    <div className="text-xs text-slate-400 mb-0.5">$0 cash flow</div>
+                    <div className="text-xs text-slate-400 mb-0.5">Breakeven rent for cashflow</div>
                     <div className="text-xl font-bold text-slate-800">
                       {results.breakevenRent !== null ? formatCurrency(results.breakevenRent) : 'N/A'}
                     </div>
-                    <div className="text-xs text-slate-400 mt-2 mb-0.5">$0 total return</div>
+                    <div className="text-xs text-slate-400 mt-2 mb-0.5">Breakeven rent for total return</div>
                     <div className="text-base font-semibold text-slate-600">
                       {results.breakevenRentTotalReturn !== null ? formatCurrency(results.breakevenRentTotalReturn) : 'N/A'}
                     </div>
                   </div>
                   <div className="bg-white p-4 text-center">
-                    <div className="text-sm text-slate-500 mb-2">Breakeven Down Pmt</div>
-                    <div className="text-xs text-slate-400 mb-0.5">$0 cash flow</div>
+                    <div className="text-xs text-slate-400 mb-0.5">Breakeven down pmt for cashflow</div>
                     <div className="text-xl font-bold text-slate-800">
                       {results.breakevenDownPaymentPercent !== null ? formatPercent(results.breakevenDownPaymentPercent) : 'N/A'}
                     </div>
-                    <div className="text-xs text-slate-400 mt-2 mb-0.5">$0 total return</div>
+                    <div className="text-xs text-slate-400 mt-2 mb-0.5">Breakeven down pmt for total return</div>
                     <div className="text-base font-semibold text-slate-600">
                       {results.breakevenDownPaymentPercentTotalReturn !== null ? formatPercent(results.breakevenDownPaymentPercentTotalReturn) : 'N/A'}
                     </div>
