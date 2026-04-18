@@ -139,9 +139,14 @@ export default function App() {
       ? (fixedExpenses + monthlyMortgage) / (1 - variableRate) - getVal(inputs.otherIncome)
       : null;
 
-    // Breakeven Down Payment: down payment % where mortgage = monthlyNOI (cash flow = 0)
-    // Operating expenses are fixed relative to price, so we solve for the loan amount
-    // that makes mortgage = monthlyNOI
+    // Breakeven Rent: rent where total return = 0
+    // Total return = cash flow + principal = 0 means covering interest + operating expenses only
+    const breakevenRentTotalReturn = variableRate < 1
+      ? (fixedExpenses + firstMonthInterest) / (1 - variableRate) - getVal(inputs.otherIncome)
+      : null;
+
+    // Breakeven Down Payment: down payment % where cash flow = 0
+    // Solve for loan amount where mortgage payment = monthlyNOI
     let breakevenDownPaymentPercent = null;
     if (monthlyNOI > 0 && payments > 0 && price > 0) {
       const mortgageFactor = rate > 0
@@ -149,6 +154,15 @@ export default function App() {
         : 1 / payments;
       const breakevenLoan = monthlyNOI / mortgageFactor;
       breakevenDownPaymentPercent = Math.max(0, Math.min(100, ((price - breakevenLoan) / price) * 100));
+    }
+
+    // Breakeven Down Payment: down payment % where total return = 0
+    // Total return = 0 means interest = monthlyNOI → loanAmount = monthlyNOI / rate
+    // At 0% interest total return is unaffected by down payment, so N/A
+    let breakevenDownPaymentPercentTotalReturn = null;
+    if (monthlyNOI > 0 && rate > 0 && price > 0) {
+      const breakevenLoan = monthlyNOI / rate;
+      breakevenDownPaymentPercentTotalReturn = Math.max(0, Math.min(100, ((price - breakevenLoan) / price) * 100));
     }
 
     return {
@@ -168,7 +182,9 @@ export default function App() {
       cashOnCashReturn,
       capRate,
       breakevenRent,
+      breakevenRentTotalReturn,
       breakevenDownPaymentPercent,
+      breakevenDownPaymentPercentTotalReturn,
       breakdown: {
         mortgage: monthlyMortgage,
         taxes: monthlyTaxes,
@@ -321,15 +337,25 @@ export default function App() {
                     </div>
                   </div>
                   <div className="bg-white p-4 text-center">
-                    <div className="text-sm text-slate-500 mb-1">Breakeven Rent</div>
+                    <div className="text-sm text-slate-500 mb-2">Breakeven Rent</div>
+                    <div className="text-xs text-slate-400 mb-0.5">$0 cash flow</div>
                     <div className="text-xl font-bold text-slate-800">
                       {results.breakevenRent !== null ? formatCurrency(results.breakevenRent) : 'N/A'}
                     </div>
+                    <div className="text-xs text-slate-400 mt-2 mb-0.5">$0 total return</div>
+                    <div className="text-base font-semibold text-slate-600">
+                      {results.breakevenRentTotalReturn !== null ? formatCurrency(results.breakevenRentTotalReturn) : 'N/A'}
+                    </div>
                   </div>
                   <div className="bg-white p-4 text-center">
-                    <div className="text-sm text-slate-500 mb-1">Breakeven Down Pmt</div>
+                    <div className="text-sm text-slate-500 mb-2">Breakeven Down Pmt</div>
+                    <div className="text-xs text-slate-400 mb-0.5">$0 cash flow</div>
                     <div className="text-xl font-bold text-slate-800">
                       {results.breakevenDownPaymentPercent !== null ? formatPercent(results.breakevenDownPaymentPercent) : 'N/A'}
+                    </div>
+                    <div className="text-xs text-slate-400 mt-2 mb-0.5">$0 total return</div>
+                    <div className="text-base font-semibold text-slate-600">
+                      {results.breakevenDownPaymentPercentTotalReturn !== null ? formatPercent(results.breakevenDownPaymentPercentTotalReturn) : 'N/A'}
                     </div>
                   </div>
                 </div>
