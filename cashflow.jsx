@@ -341,20 +341,28 @@ export default function App() {
                     <div className="text-xl font-bold text-slate-800">
                       {results.breakevenRent !== null ? formatCurrency(results.breakevenRent) : 'N/A'}
                     </div>
-                    <div className="text-xs text-slate-400 mt-2 mb-0.5">Breakeven rent for total return</div>
-                    <div className="text-base font-semibold text-slate-600">
-                      {results.breakevenRentTotalReturn !== null ? formatCurrency(results.breakevenRentTotalReturn) : 'N/A'}
-                    </div>
+                    {results.breakevenRent !== null && (() => {
+                      const delta = results.breakevenRent - getVal(inputs.monthlyRent);
+                      return (
+                        <div className={`text-xs mt-1 font-medium ${delta > 0 ? 'text-rose-500' : 'text-emerald-600'}`}>
+                          {delta > 0 ? `+${formatCurrency(delta)} needed` : `${formatCurrency(delta)} below current`}
+                        </div>
+                      );
+                    })()}
                   </div>
                   <div className="bg-white p-4 text-center">
                     <div className="text-xs text-slate-400 mb-0.5">Breakeven down pmt for cashflow</div>
                     <div className="text-xl font-bold text-slate-800">
                       {results.breakevenDownPaymentPercent !== null ? formatPercent(results.breakevenDownPaymentPercent) : 'N/A'}
                     </div>
-                    <div className="text-xs text-slate-400 mt-2 mb-0.5">Breakeven down pmt for total return</div>
-                    <div className="text-base font-semibold text-slate-600">
-                      {results.breakevenDownPaymentPercentTotalReturn !== null ? formatPercent(results.breakevenDownPaymentPercentTotalReturn) : 'N/A'}
-                    </div>
+                    {results.breakevenDownPaymentPercent !== null && (() => {
+                      const delta = results.breakevenDownPaymentPercent - getVal(inputs.downPaymentPercent);
+                      return (
+                        <div className={`text-xs mt-1 font-medium ${delta > 0 ? 'text-rose-500' : 'text-emerald-600'}`}>
+                          {delta > 0 ? `+${formatPercent(delta)} needed` : `${formatPercent(delta)} below current`}
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
 
@@ -429,6 +437,34 @@ export default function App() {
                         {formatCurrency(results.monthlyCashFlow + results.firstMonthPrincipal)}
                       </span>
                     </div>
+                    {results.breakevenRentTotalReturn !== null && (() => {
+                      const delta = results.breakevenRentTotalReturn - getVal(inputs.monthlyRent);
+                      return (
+                        <div className="flex justify-between items-center text-xs pl-4">
+                          <span className="text-slate-500">Breakeven rent for total return</span>
+                          <div className="text-right">
+                            <div className="text-slate-600">{formatCurrency(results.breakevenRentTotalReturn)}</div>
+                            <div className={`font-medium ${delta > 0 ? 'text-rose-500' : 'text-emerald-600'}`}>
+                              {delta > 0 ? `+${formatCurrency(delta)} needed` : `${formatCurrency(delta)} below current`}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                    {results.breakevenDownPaymentPercentTotalReturn !== null && (() => {
+                      const delta = results.breakevenDownPaymentPercentTotalReturn - getVal(inputs.downPaymentPercent);
+                      return (
+                        <div className="flex justify-between items-center text-xs pl-4">
+                          <span className="text-slate-500">Breakeven down pmt for total return</span>
+                          <div className="text-right">
+                            <div className="text-slate-600">{formatPercent(results.breakevenDownPaymentPercentTotalReturn)}</div>
+                            <div className={`font-medium ${delta > 0 ? 'text-rose-500' : 'text-emerald-600'}`}>
+                              {delta > 0 ? `+${formatPercent(delta)} needed` : `${formatPercent(delta)} below current`}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   {/* Expense Bar Visualization */}
