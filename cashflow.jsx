@@ -132,6 +132,25 @@ export default function App() {
     const cashOnCashReturn = initialInvestment > 0 ? (annualCashFlow / initialInvestment) * 100 : 0;
     const capRate = price > 0 ? (annualNOI / price) * 100 : 0;
 
+    // Breakeven Rent: rent where cash flow = 0
+    // (rent + otherIncome)(1 - variableRate) = fixedExpenses + mortgage
+    const variableRate = (getVal(inputs.vacancyPercent) + getVal(inputs.maintenancePercent) + getVal(inputs.capexPercent) + getVal(inputs.managementPercent)) / 100;
+    const breakevenRent = variableRate < 1
+      ? (fixedExpenses + monthlyMortgage) / (1 - variableRate) - getVal(inputs.otherIncome)
+      : null;
+
+    // Breakeven Down Payment: down payment % where mortgage = monthlyNOI (cash flow = 0)
+    // Operating expenses are fixed relative to price, so we solve for the loan amount
+    // that makes mortgage = monthlyNOI
+    let breakevenDownPaymentPercent = null;
+    if (monthlyNOI > 0 && payments > 0 && price > 0) {
+      const mortgageFactor = rate > 0
+        ? (rate * Math.pow(1 + rate, payments)) / (Math.pow(1 + rate, payments) - 1)
+        : 1 / payments;
+      const breakevenLoan = monthlyNOI / mortgageFactor;
+      breakevenDownPaymentPercent = Math.max(0, Math.min(100, ((price - breakevenLoan) / price) * 100));
+    }
+
     return {
       loanAmount,
       downPayment,
@@ -148,6 +167,8 @@ export default function App() {
       annualCashFlow,
       cashOnCashReturn,
       capRate,
+      breakevenRent,
+      breakevenDownPaymentPercent,
       breakdown: {
         mortgage: monthlyMortgage,
         taxes: monthlyTaxes,
@@ -297,6 +318,18 @@ export default function App() {
                     <div className="text-sm text-slate-500 mb-1">Total Cash Needed</div>
                     <div className="text-xl font-bold text-indigo-600">
                       {formatCurrency(results.initialInvestment)}
+                    </div>
+                  </div>
+                  <div className="bg-white p-4 text-center">
+                    <div className="text-sm text-slate-500 mb-1">Breakeven Rent</div>
+                    <div className="text-xl font-bold text-slate-800">
+                      {results.breakevenRent !== null ? formatCurrency(results.breakevenRent) : 'N/A'}
+                    </div>
+                  </div>
+                  <div className="bg-white p-4 text-center">
+                    <div className="text-sm text-slate-500 mb-1">Breakeven Down Pmt</div>
+                    <div className="text-xl font-bold text-slate-800">
+                      {results.breakevenDownPaymentPercent !== null ? formatPercent(results.breakevenDownPaymentPercent) : 'N/A'}
                     </div>
                   </div>
                 </div>
