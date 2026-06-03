@@ -422,6 +422,11 @@ export default function App() {
                     </div>
                     
                     <div className="border-t border-slate-200 my-2 pt-3 flex justify-between items-center font-semibold text-sm">
+                      <span className="text-slate-800">Total Monthly Expense</span>
+                      <span className="text-rose-600">-{formatCurrency(results.monthlyMortgage + results.operatingExpenses)}</span>
+                    </div>
+
+                    <div className="border-t border-slate-200 my-2 pt-3 flex justify-between items-center font-semibold text-sm">
                       <span className="text-slate-800">Cash Flow</span>
                       <span className={results.monthlyCashFlow >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
                         {formatCurrency(results.monthlyCashFlow)}
